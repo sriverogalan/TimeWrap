@@ -1,6 +1,9 @@
 # Calculo Horas (package.json)
 
-Es un programa para calcular a que hora acabarias dependiendo de la hora que insertes
+Es un programa para calcular a que hora acabarias dependiendo de la hora que insertes, ejemplo :
+
+Si son las 5:00:00 am y quieres sumar 2 horas, con esta app puedes hacerlo ;)
+
 
 ## Install the dependencies
 ```bash
