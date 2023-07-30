@@ -1,6 +1,6 @@
 # Calculo Horas (package.json)
 
-Es un programa para calcular a que hora acabarias dependiendo de la hora que insertes
+Es una aplicación que permite sumar dos horas y obtener el resultado en formato HH:MM:SS solo con Javascript.
 
 ## Install the dependencies
 ```bash

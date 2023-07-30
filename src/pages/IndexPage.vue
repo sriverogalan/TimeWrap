@@ -7,8 +7,9 @@
     <h3 v-if="substractHours" class="text-light-green-12 text-weight-medium">
       A las {{ substractHours }} 😉
     </h3>
+    <h5>Selecciona la fecha a la que empieza</h5>
     <q-time v-model="hour" color="purple-9" with-seconds format24h bordered>
-      <q-input v-model="hourToPlus" filled type="time" label="Tiempo que deseas sumar" />
+      <q-input v-model="hourToPlus" filled type="time" label="Tiempo que deseas sumar a esa fecha" />
       <q-btn
         color="purple-9"
         label="Calcular"
