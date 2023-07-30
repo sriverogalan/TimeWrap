@@ -1,6 +1,6 @@
 # Calculo Horas (package.json)
 
-Es un programa para calcular las horas
+Es un programa para calcular a que hora acabarias dependiendo de la hora que insertes
 
 ## Install the dependencies
 ```bash
