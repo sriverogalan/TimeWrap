@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="bg-purple-9">
       <q-toolbar>
-        <q-toolbar-title> Horas Restantes App </q-toolbar-title>
+        <q-toolbar-title> A que hora terminarias APP </q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-page-container>
