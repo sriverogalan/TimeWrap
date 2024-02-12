@@ -137,6 +137,7 @@
             color="orange-10"
             label="Restar horas"
             class="q-mt-lg mb-50px"
+            v-if="substractHours.length < 3"
           />
           <q-btn
             @click="clearAllComponents"
