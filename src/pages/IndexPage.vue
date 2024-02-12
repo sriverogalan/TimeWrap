@@ -117,12 +117,19 @@
       </div>
 
       <div class="col-6 mt-20px row justify-around">
-        <h3 v-if="substractHoursResult" class="col-12 text-center text-green-8">
-          {{
-            substractHoursResult != null
-              ? "Terminarias a las " + substractHoursResult
-              : ""
-          }}
+        <h3
+          v-if="substractHoursResult"
+          :class="{
+            'text-red-8':
+              substractHoursResult.includes('tiempo de inicio no puede') ||
+              substractHoursResult.includes('Revisa que todo este correctamente'),
+            'text-green-8':
+              !substractHoursResult.includes('tiempo de inicio no puede') &&
+              !substractHoursResult.includes('Revisa que todo este correctamente'),
+          }"
+          class="col-12 text-center"
+        >
+          {{ substractHoursResult }}
         </h3>
         <div class="col-6 row justify-around">
           <q-btn
@@ -141,11 +148,7 @@
             color="blue-9"
             label="Calcular"
             @click="
-              substractHoursResult = regexHour.test(
-                calculateHours(hour, hourToPlus, substractHours)
-              )
-                ? calculateHours(hour, hourToPlus, substractHours)
-                : `00:00:00`
+              substractHoursResult = calculateHours(hour, hourToPlus, substractHours)
             "
             class="q-mt-lg mb-50px"
           />
@@ -165,7 +168,7 @@ const hourToPlus = ref("08:30:00");
 const substractHoursResult = ref();
 const substractHours = ref([]);
 // Regex hour
-const regexHour = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/);
+const regexHour = new RegExp(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
 
 // Functions
 const addComponent = () => {
@@ -176,34 +179,52 @@ const addComponent = () => {
 
 const calculateHours = (firstHour, secondHour, substractHours) => {
   if (!firstHour || !secondHour) return;
-  const first = new Date(`1970-01-01T${firstHour}Z`);
-  const second = new Date(`1970-01-01T${secondHour}Z`);
-  let isBiggerThanSecond = false;
-  let result = new Date(
-    first.getUTCHours() * 60 * 60 * 1000 + second.getUTCHours() * 60 * 60 * 1000
-  );
 
-  substractHours.forEach((time) => {
+  const first = new Date(`1970-01-01T${firstHour}`);
+  const second = new Date(`1970-01-01T${secondHour}`);
+
+  // Convertir las horas a milisegundos
+  const firstInMilliseconds =
+    first.getHours() * 60 * 60 * 1000 + first.getMinutes() * 60 * 1000;
+  const secondInMilliseconds =
+    second.getHours() * 60 * 60 * 1000 + second.getMinutes() * 60 * 1000;
+
+  // Sumarle el total de horas del second al first
+  let resultInMilliseconds = firstInMilliseconds + secondInMilliseconds;
+
+  for (let i = 0; i < substractHours.length; i++) {
+    const time = substractHours[i];
     if (!time.start || !time.end) return;
-    const start = new Date(`1970-01-01T${time.start}Z`);
-    const end = new Date(`1970-01-01T${time.end}Z`);
+    const start = new Date(`1970-01-01T${time.start}`);
+    const end = new Date(`1970-01-01T${time.end}`);
 
-    if (start.getTime() > end.getTime()) {
-      isBiggerThanSecond = true;
+    // Convertir las horas a milisegundos
+    const startInMilliseconds =
+      start.getHours() * 60 * 60 * 1000 + start.getMinutes() * 60 * 1000;
+    const endInMilliseconds =
+      end.getHours() * 60 * 60 * 1000 + end.getMinutes() * 60 * 1000;
+
+    // Si el tiempo de inicio es mayor que el tiempo de fin, enviar un mensaje
+    if (startInMilliseconds > endInMilliseconds) {
+      return "El tiempo de inicio no puede ser mayor que el tiempo de fin";
     }
 
-    result = new Date(result.getTime() - (start.getTime() - end.getTime()));
-  });
+    // Restar el tiempo de inicio y de fin y sumarlo al resultado anterior
+    resultInMilliseconds += endInMilliseconds - startInMilliseconds;
+  }
 
-  let hours = result.getUTCHours().toString().padStart(2, "0");
-  let minutes = result.getUTCMinutes().toString().padStart(2, "0");
-  let seconds = result.getUTCSeconds().toString().padStart(2, "0");
+  // Convertir el resultado a horas y minutos
+  const resultHours = Math.floor(resultInMilliseconds / (60 * 60 * 1000));
+  const resultMinutes = Math.floor(
+    (resultInMilliseconds % (60 * 60 * 1000)) / (60 * 1000)
+  );
 
-  return isBiggerThanSecond === true
+  return resultHours < 0
     ? "Revisa que todo este correctamente"
-    : `${hours}:${minutes}:${seconds}`;
+    : `Terminarias a las ${resultHours
+        .toString()
+        .padStart(2, "0")}:${resultMinutes.toString().padStart(2, "0")}h `;
 };
-
 const clearAllComponents = () => {
   substractHours.value = [];
 };
