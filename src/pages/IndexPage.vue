@@ -60,7 +60,7 @@
             class="col-12 row justify-center items-center"
           >
             <h3 class="text-h4 col-12 text-center mt-20px">
-              {{ index + 1 }} - Restar las horas
+              {{ index + 1 }} - Horas de pausa
             </h3>
             <div class="col-6 row justify-around items-center">
               <q-input
@@ -122,10 +122,12 @@
           :class="{
             'text-red-8':
               substractHoursResult.includes('tiempo de inicio no puede') ||
-              substractHoursResult.includes('Revisa que todo este correctamente'),
+              substractHoursResult.includes('Revisa que todo este correctamente') ||
+              substractHoursResult.includes('Completa todos los campos'),
             'text-green-8':
               !substractHoursResult.includes('tiempo de inicio no puede') &&
-              !substractHoursResult.includes('Revisa que todo este correctamente'),
+              !substractHoursResult.includes('Revisa que todo este correctamente') &&
+              !substractHoursResult.includes('Completa todos los campos'),
           }"
           class="col-12 text-center"
         >
@@ -142,7 +144,8 @@
           <q-btn
             @click="clearAllComponents"
             color="red-9"
-            label="Quitar todos"
+            label="Quitar todas"
+            v-if="substractHours.length > 1"
             class="q-mt-lg mb-50px"
           />
           <q-btn
@@ -179,7 +182,7 @@ const addComponent = () => {
 };
 
 const calculateHours = (firstHour, secondHour, substractHours) => {
-  if (!firstHour || !secondHour) return;
+  if (!firstHour || !secondHour) return "Completa todos los campos";
 
   const first = new Date(`1970-01-01T${firstHour}`);
   const second = new Date(`1970-01-01T${secondHour}`);
@@ -195,7 +198,7 @@ const calculateHours = (firstHour, secondHour, substractHours) => {
 
   for (let i = 0; i < substractHours.length; i++) {
     const time = substractHours[i];
-    if (!time.start || !time.end) return;
+    if (!time.start || !time.end) return "Completa todos los campos";
     const start = new Date(`1970-01-01T${time.start}`);
     const end = new Date(`1970-01-01T${time.end}`);
 
