@@ -16,7 +16,7 @@ Validar que las horas introducidas sean válidas.
 Mostrar mensajes de error si las horas introducidas no son válidas.
 Instrucciones de uso:
 
-## Clonar el repositorio: git clone https://github.com/tu-usuario/suma-resta-horas.git
+## Como instalar?
 Instalar las dependencias: npm install
 Iniciar la aplicación: npm run dev
 Introducir las dos horas que desea sumar o restar en los campos correspondientes.
